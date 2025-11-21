@@ -1,0 +1,1 @@
+# test-strapi-docker-template
