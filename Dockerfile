@@ -1,20 +1,27 @@
 FROM node:20
 
-# Set working directory
 WORKDIR /opt/app
 
-# Copy all application files including node_modules
-COPY . ./
+# Enable corepack for Yarn (Node 20 has it built-in)
+RUN corepack enable
+
+# Copy dependency manifests first (better layer caching)
+COPY package.json yarn.lock* ./
+
+# Install dependencies inside container (gets correct linux builds)
+RUN if [ -f yarn.lock ]; then yarn install; \
+    else npm install; fi
+
+# Copy rest of application source
+COPY . .
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Expose the Strapi port
 EXPOSE 1337
 
-# Set environment to production
-ENV NODE_ENV=production
+# Use development mode for hot-reload
+ENV NODE_ENV=development
 
-# Start Strapi using custom entrypoint
 ENTRYPOINT ["docker-entrypoint.sh"]

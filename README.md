@@ -32,6 +32,20 @@ Copy the example environment file and customize if needed:
 cp .env.example .env
 ```
 
+**Generate secure secrets:**
+
+```bash
+# Génère des valeurs à copier-coller
+echo "APP_KEYS=\"$(openssl rand -hex 16),$(openssl rand -hex 16)\""
+echo "API_TOKEN_SALT=$(openssl rand -hex 16)"
+echo "ADMIN_JWT_SECRET=$(openssl rand -hex 32)"
+echo "TRANSFER_TOKEN_SALT=$(openssl rand -hex 16)"
+echo "JWT_SECRET=$(openssl rand -hex 32)"
+echo "ENCRYPTION_KEY=$(openssl rand -hex 32)"
+```
+
+Copy the generated values and replace the corresponding `toBeModified` values in your `.env` file.
+
 The default configuration includes:
 - **Strapi Port**: 1337
 - **Database**: MySQL 8.0
